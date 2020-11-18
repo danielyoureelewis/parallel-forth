@@ -1163,7 +1163,21 @@ DBUG(("XX ah,m,l = 0x%8x,%8x,%8x - qh,l = 0x%8x,%8x\n", ah,am,al, qh,ql ));
 			: THROW_RESIZE_FILE );
 	    }
 	    endcase;
-
+	case ID_SHMEM_ID:
+	    {
+                M_PUSH( (cell_t) shmem_my_pe() );
+            }
+            endcase;
+	case ID_SHMEM_GET:
+	    {
+                ;
+            }
+            endcase;
+	case ID_SHMEM_PUT:
+	    {
+                ;
+            }
+            endcase;
         case ID_FILL: /* ( caddr num charval -- ) */
             {
                 register char *DstPtr;

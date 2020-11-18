@@ -22,7 +22,7 @@
 ** OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 **
 ***************************************************************/
-
+#include <shmem.h>
 #if (defined(PF_NO_STDIO) || defined(PF_EMBEDDED))
     #define NULL  ((void *) 0)
     #define ERR(msg) /* { printf msg; } */
@@ -50,6 +50,7 @@
 #ifdef PF_EMBEDDED
 int main( void )
 {
+	shmem_init();
     char IfInit = 0;
     const char *DicName = NULL;
     const char *SourceName = NULL;

@@ -288,14 +288,14 @@ enum cforth_primitive_ids
     ID_FILE_FLUSH,		/* FLUSH-FILE */
     ID_FILE_RENAME,		/* (RENAME-FILE) */
     ID_FILE_RESIZE,		/* RESIZE-FILE */
+    ID_SHMEM_ID,
 /* If you add a word here, take away one reserved word below. */
 #ifdef PF_SUPPORT_FP
 /* Only reserve space if we are adding FP so that we can detect
 ** unsupported primitives when loading dictionary.
 */
-    ID_RESERVED01,
-    ID_RESERVED02,
-    ID_RESERVED03,
+    ID_SHMEM_GET,
+    ID_SHMEM_PUT,
     ID_RESERVED04,
     ID_RESERVED05,
     ID_RESERVED06,

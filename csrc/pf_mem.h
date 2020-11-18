@@ -44,8 +44,8 @@
         #include PF_USER_MALLOC
     #else
         #define pfInitMemoryAllocator()
-        #define pfAllocMem malloc
-        #define pfFreeMem free
+        #define pfAllocMem shmem_malloc
+        #define pfFreeMem shmem_free
     #endif
 
 #endif /* PF_NO_MALLOC */
