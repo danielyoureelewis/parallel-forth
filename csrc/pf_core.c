@@ -448,7 +448,7 @@ ThrowCode pfDoForth( const char *DicFileName, const char *SourceName, cell_t IfI
 #endif
 
     pfInit();
-
+    printf("pfInit");
 /* Allocate Task structure. */
     pfDebugMessage("pfDoForth: call pfCreateTask()\n");
     cftd = pfCreateTask( DEFAULT_USER_DEPTH, DEFAULT_RETURN_DEPTH );
@@ -526,7 +526,7 @@ ThrowCode pfDoForth( const char *DicFileName, const char *SourceName, cell_t IfI
         {
             EMIT_CR;
         }
-
+        MSG("pfExecIfDefined");
         pfDebugMessage("pfDoForth: try AUTO.INIT\n");
         Result = pfExecIfDefined("AUTO.INIT");
         if( Result != 0 )

@@ -135,7 +135,6 @@
 ;
 : ALIGN ( -- , align DP )  dp @ aligned dp ! ;
 : ALLOT ( nbytes -- , allot space in dictionary ) dp +! ( align ) ;
-
 : C,    ( c -- )  here c! 1 chars dp +! ;
 : W,    ( w -- )  dp @ even-up dup dp !    w!  2 chars dp +! ;
 : , ( n -- , lay into dictionary )  align here !  cell allot ;

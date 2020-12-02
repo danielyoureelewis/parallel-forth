@@ -50,7 +50,7 @@
 #ifdef PF_EMBEDDED
 int main( void )
 {
-	shmem_init();
+  	shmem_init();
     char IfInit = 0;
     const char *DicName = NULL;
     const char *SourceName = NULL;
@@ -61,12 +61,12 @@ int main( void )
 
 int main( int argc, char **argv )
 {
+    shmem_init();
 #ifdef PF_STATIC_DIC
     const char *DicName = NULL;
 #else /* PF_STATIC_DIC */
     const char *DicName = PF_DEFAULT_DICTIONARY;
 #endif /* !PF_STATIC_DIC */
-
     const char *SourceName = NULL;
     char IfInit = FALSE;
     char *s;
@@ -127,7 +127,7 @@ int main( int argc, char **argv )
             SourceName = s;
         }
     }
-/* Force Init */
+    /* Force Init */
 #ifdef PF_INIT_MODE
     IfInit = TRUE;
     DicName = NULL;
@@ -140,9 +140,7 @@ int main( int argc, char **argv )
         goto on_error;
     }
 #endif
-
     Result = pfDoForth( DicName, SourceName, IfInit);
-
 on_error:
     return (int)Result;
 }

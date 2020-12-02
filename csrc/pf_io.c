@@ -59,6 +59,8 @@ void ioEmit( char c )
             gCurrentTask->td_OUT++;
         }
     }
+    //adding this to test openSHMEM
+    fflush(stdout);
 }
 
 /***************************************************************

@@ -25,6 +25,7 @@
 **
 ***************************************************************/
 
+#include <shmem.h>
 /* Define stubs for data types so we can pass pointers but not touch inside. */
 typedef void *PForthTask;
 typedef void *PForthDictionary;

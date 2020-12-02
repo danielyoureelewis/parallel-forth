@@ -80,6 +80,18 @@
 #define CREATE_BODY_OFFSET  (3*sizeof(cell_t))
 
 /***************************************************************
+** SHMEM function IDS
+** Do NOT change the order of these IDs or the wrong shmem function will be called!
+***************************************************************/
+enum shmem_func_ids
+{
+    SHMEM_N_PES = 0,
+    SHMEM_MY_PE,
+    SHMEM_PUT,
+    SHMEM_GET,
+    SHMEM_BARRIER,
+};
+/***************************************************************
 ** Primitive Token IDS
 ** Do NOT change the order of these IDs or dictionary files will break!
 ***************************************************************/
@@ -288,14 +300,14 @@ enum cforth_primitive_ids
     ID_FILE_FLUSH,		/* FLUSH-FILE */
     ID_FILE_RENAME,		/* (RENAME-FILE) */
     ID_FILE_RESIZE,		/* RESIZE-FILE */
-    ID_SHMEM_ID,
+    ID_SHMEM_OP,
 /* If you add a word here, take away one reserved word below. */
 #ifdef PF_SUPPORT_FP
 /* Only reserve space if we are adding FP so that we can detect
 ** unsupported primitives when loading dictionary.
 */
-    ID_SHMEM_GET,
-    ID_SHMEM_PUT,
+    ID_RESERVED02,
+    ID_RESERVED03,
     ID_RESERVED04,
     ID_RESERVED05,
     ID_RESERVED06,

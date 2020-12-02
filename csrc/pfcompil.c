@@ -264,9 +264,7 @@ PForthDictionary pfBuildDictionary( cell_t HeaderSize, cell_t CodeSize )
     CreateDicEntryC( ID_FILE_FLUSH, "FLUSH-FILE",  0 );
     CreateDicEntryC( ID_FILE_RENAME, "(RENAME-FILE)",  0 );
     CreateDicEntryC( ID_FILE_RESIZE, "(RESIZE-FILE)",  0 );
-    CreateDicEntryC( ID_SHMEM_ID, "ID", 0);
-    CreateDicEntryC( ID_SHMEM_GET, "GET", 0);
-    CreateDicEntryC( ID_SHMEM_PUT, "PUT", 0);
+    CreateDicEntryC( ID_SHMEM_OP, "SHMEM_OP", 0);
     CreateDicEntryC( ID_FILE_RO, "R/O",  0 );
     CreateDicEntryC( ID_FILE_RW, "R/W",  0 );
     CreateDicEntryC( ID_FILE_WO, "W/O",  0 );

@@ -24,7 +24,7 @@ PFORTHAPP    = pforth_standalone
 WIDTHOPT=
 
 FULL_WARNINGS =  \
-        --std=c89 \
+        --std=c11 \
         -fsigned-char \
         -fno-builtin \
         -fno-unroll-loops \
