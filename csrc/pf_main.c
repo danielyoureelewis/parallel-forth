@@ -1,34 +1,34 @@
 /* @(#) pf_main.c 98/01/26 1.2 */
 /***************************************************************
-** Forth based on 'C'
-**
-** main() routine that demonstrates how to call PForth as
-** a module from 'C' based application.
-** Customize this as needed for your application.
-**
-** Author: Phil Burk
-** Copyright 1994 3DO, Phil Burk, Larry Polansky, David Rosenboom
-**
-** Permission to use, copy, modify, and/or distribute this
-** software for any purpose with or without fee is hereby granted.
-**
-** THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
-** WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
-** WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL
-** THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-** CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING
-** FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
-** CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-** OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-**
-***************************************************************/
+ ** Forth based on 'C'
+ **
+ ** main() routine that demonstrates how to call PForth as
+ ** a module from 'C' based application.
+ ** Customize this as needed for your application.
+ **
+ ** Author: Phil Burk
+ ** Copyright 1994 3DO, Phil Burk, Larry Polansky, David Rosenboom
+ **
+ ** Permission to use, copy, modify, and/or distribute this
+ ** software for any purpose with or without fee is hereby granted.
+ **
+ ** THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+ ** WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+ ** WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL
+ ** THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+ ** CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING
+ ** FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
+ ** CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ ** OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ **
+ ***************************************************************/
 #include <shmem.h>
 #if (defined(PF_NO_STDIO) || defined(PF_EMBEDDED))
-    #define NULL  ((void *) 0)
-    #define ERR(msg) /* { printf msg; } */
+#define NULL  ((void *) 0)
+#define ERR(msg) /* { printf msg; } */
 #else
-    #include <stdio.h>
-    #define ERR(msg) { printf msg; }
+#include <stdio.h>
+#define ERR(msg) { printf msg; }
 #endif
 
 #include "pforth.h"
@@ -38,8 +38,8 @@
 #endif
 
 #ifdef __MWERKS__
-    #include <console.h>
-    #include <sioux.h>
+#include <console.h>
+#include <sioux.h>
 #endif
 
 #ifndef TRUE
@@ -59,9 +59,14 @@ int main( void )
 }
 #else
 
+long pSync[SHMEM_BARRIER_SYNC_SIZE];
+
 int main( int argc, char **argv )
 {
     shmem_init();
+    for(int i = 0; i < SHMEM_BARRIER_SYNC_SIZE; i++)
+        pSync[i] = SHMEM_SYNC_VALUE;
+
 #ifdef PF_STATIC_DIC
     const char *DicName = NULL;
 #else /* PF_STATIC_DIC */

@@ -90,6 +90,7 @@ enum shmem_func_ids
     SHMEM_PUT,
     SHMEM_GET,
     SHMEM_BARRIER,
+    SHMEM_MALLOC,
 };
 /***************************************************************
 ** Primitive Token IDS

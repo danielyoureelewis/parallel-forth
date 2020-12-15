@@ -838,11 +838,9 @@ ThrowCode ffInterpret( void )
 /* Is there any text left in Source ? */
     while( gCurrentTask->td_IN < (gCurrentTask->td_SourceNum) )
     {
-
         pfDebugMessage("ffInterpret: calling ffWord(()\n");
         theWord = ffLWord( BLANK );
         DBUG(("ffInterpret: theWord = 0x%x, Len = %d\n", theWord, *theWord ));
-
         if( *theWord > 0 )
         {
             flag = 0;
@@ -863,6 +861,7 @@ ThrowCode ffInterpret( void )
         DBUG(("ffInterpret: IN=%d, SourceNum=%d\n", gCurrentTask->td_IN,
             gCurrentTask->td_SourceNum ) );
     }
+
 error:
     return exception;
 }
@@ -888,7 +887,7 @@ ThrowCode ffOK( void )
         {
             if( !gVarQuiet )
             {
-                MSG( "   ok\n" );
+                MSG( "  ok\n");
                 if(gVarTraceStack) ffDotS();
             }
             else
@@ -919,12 +918,45 @@ void pfHandleIncludeError( void )
 ***************************************************************/
 ThrowCode ffOuterInterpreterLoop( void )
 {
-    cell_t exception = 0;
+    static cell_t exception = 0;
     do
     {
-        exception = ffRefill();
+        if(shmem_my_pe() == 0){
+            exception = ffRefill();
+        }
+        //this is broken maybe print what is being broadcast? Confirm the next several lines do what we think
+        shmem_barrier_all();
+        shmem_broadcast64(gCurrentTask,
+                          gCurrentTask,
+                          sizeof(pfTaskData_t),
+                          0,
+                          0,
+                          0,
+                          shmem_n_pes(),
+                          pSync);
+        shmem_barrier_all();
+        shmem_broadcast64(gCurrentTask->td_TIB,
+                          gCurrentTask->td_TIB,
+                          gCurrentTask->td_SourceNum,
+                          0,
+                          0,
+                          0,
+                          shmem_n_pes(),
+                          pSync);
+        
+        shmem_barrier_all();
+        shmem_broadcast64(&exception,
+                          &exception,
+                          1,
+                          0,
+                          0,
+                          0,
+                          shmem_n_pes(),
+                          pSync);
+        
+        shmem_barrier_all();
+        if(shmem_my_pe() != 0) gCurrentTask->td_InputStream = PF_STDIN;
         if(exception <= 0) break;
-
         exception = ffInterpret();
         if( exception == 0 )
         {
@@ -1159,7 +1191,7 @@ cell_t ffRefill( void )
 /* get line from current stream */
     if( gCurrentTask->td_InputStream == PF_STDIN )
     {
-    /* ACCEPT is deferred so we call it through the dictionary. */
+        /* ACCEPT is deferred so we call it through the dictionary. */
         ThrowCode throwCode;
         PUSH_DATA_STACK( gCurrentTask->td_SourcePtr );
         PUSH_DATA_STACK( TIB_SIZE );

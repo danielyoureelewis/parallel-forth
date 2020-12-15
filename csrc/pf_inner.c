@@ -329,7 +329,6 @@ ThrowCode pfCatch( ExecToken XT )
     do
     {
         DBUG(("pfCatch: Token = 0x%x\n", Token ));
-
 /* --------------------------------------------------------------- */
 /* If secondary, thread down code tree until we hit a primitive. */
         while( !IsTokenPrimitive( Token ) )
@@ -1198,6 +1197,11 @@ ThrowCode pfCatch( ExecToken XT )
             {
                 shmem_barrier_all();
                 TOS = (*(STKPTR++));
+                break;
+            }
+            case SHMEM_MALLOC:
+            {
+                TOS = (cell_t) shmem_malloc(TOS);
                 break;
             }
             default:

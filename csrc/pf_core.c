@@ -448,7 +448,6 @@ ThrowCode pfDoForth( const char *DicFileName, const char *SourceName, cell_t IfI
 #endif
 
     pfInit();
-    printf("pfInit");
 /* Allocate Task structure. */
     pfDebugMessage("pfDoForth: call pfCreateTask()\n");
     cftd = pfCreateTask( DEFAULT_USER_DEPTH, DEFAULT_RETURN_DEPTH );
@@ -526,7 +525,6 @@ ThrowCode pfDoForth( const char *DicFileName, const char *SourceName, cell_t IfI
         {
             EMIT_CR;
         }
-        MSG("pfExecIfDefined");
         pfDebugMessage("pfDoForth: try AUTO.INIT\n");
         Result = pfExecIfDefined("AUTO.INIT");
         if( Result != 0 )
@@ -534,7 +532,6 @@ ThrowCode pfDoForth( const char *DicFileName, const char *SourceName, cell_t IfI
             MSG("Error in AUTO.INIT");
             goto error2;
         }
-
         if( EntryPoint != 0 )
         {
             Result = pfCatch( EntryPoint );
@@ -559,13 +556,11 @@ ThrowCode pfDoForth( const char *DicFileName, const char *SourceName, cell_t IfI
             }
         }
 #endif /* PF_NO_SHELL */
-
     /* Clean up after running Forth. */
         pfExecIfDefined("AUTO.TERM");
         pfDeleteDictionary( dic );
         pfDeleteTask( cftd );
     }
-
     pfTerm();
 
 #ifdef PF_USER_TERM
