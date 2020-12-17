@@ -833,7 +833,7 @@ trace-stack off
 include loadp4th.fth
 
 decimal
-
+include shmem.fth
 : ;;;; ;  \ Mark end of this file so FILE? can find things in here.
 FREEZE    \ prevent forgetting below this point
 

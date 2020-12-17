@@ -919,12 +919,19 @@ void pfHandleIncludeError( void )
 ThrowCode ffOuterInterpreterLoop( void )
 {
     static cell_t exception = 0;
+    FileStream *stream;
+    
+    stream = gCurrentTask->td_InputStream;
+
     do
     {
         if(shmem_my_pe() == 0){
             exception = ffRefill();
         }
-        //this is broken maybe print what is being broadcast? Confirm the next several lines do what we think
+        /* 
+           TODO: This is gross. An idea is to pack this into one big contiguous chunk
+           so we only have to do one big broadcast. Maybe it is buffered anyway.
+        */
         shmem_barrier_all();
         shmem_broadcast64(gCurrentTask,
                           gCurrentTask,
@@ -943,7 +950,6 @@ ThrowCode ffOuterInterpreterLoop( void )
                           0,
                           shmem_n_pes(),
                           pSync);
-        
         shmem_barrier_all();
         shmem_broadcast64(&exception,
                           &exception,
@@ -955,7 +961,9 @@ ThrowCode ffOuterInterpreterLoop( void )
                           pSync);
         
         shmem_barrier_all();
-        if(shmem_my_pe() != 0) gCurrentTask->td_InputStream = PF_STDIN;
+
+        gCurrentTask->td_InputStream = stream;
+        
         if(exception <= 0) break;
         exception = ffInterpret();
         if( exception == 0 )

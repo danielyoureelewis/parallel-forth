@@ -1,12 +1,4 @@
-( utimately these need to be in their own file )
 : debug false ; 
-: PES 0 SHMEM_OP ;
-: PE 1 SHMEM_OP ;
-: PUT 2 SHMEM_OP ;
-: GET 3 SHMEM_OP ;
-: BARRIER 4 SHMEM_OP ;
-: SHARED 5 SHMEM_OP ;
-
 ( vars used in testing )
 variable target 1 cells allot ;
 variable dest 1 cells allot ;
