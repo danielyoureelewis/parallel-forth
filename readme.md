@@ -102,4 +102,4 @@ Better formatting when in interactive mode
 
 It would be nice to have a history in interactive mode
 
-
+Segregate memory so that all allocations do not need to be symmetric.
