@@ -1,19 +1,7 @@
-README for pForth - a Portable ANS-like Forth written in ANSI 'C'
+README for parallel-forth - a shared memory Forth by Daniel Y. Lewis. This is a modification of pForth by Phil Burk with Larry Polansky, David Rosenboom, Darren Gibbs, and Alexsej Saushev.
 
-by Phil Burk
-with Larry Polansky, David Rosenboom and Darren Gibbs.
-Support for 64-bit cells by Aleksej Saushev.
+Last updated: 12/20/2020
 
-Last updated: April 24, 2018 V28
-
-Code for pForth is maintained on GitHub at:
-  https://github.com/philburk/pforth
- 
-Documentation for pForth at:
-  http://www.softsynth.com/pforth/
-
-For technical support please use the pForth forum at:
-  http://groups.google.com/group/pforthdev
   
 -- LEGAL NOTICE -----------------------------------------
 
@@ -29,66 +17,78 @@ FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
 CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
--- Contents of SDK --------------------------------------
+------------------------------------------------------------
 
-    build - tools for building pForth on various platforms
-    build/unix - Makefile for unix
-    
-    csrc - pForth kernel in ANSI 'C'
-    csrc/pf_main.c - main() application for a standalone Forth
-    csrc/stdio - I/O code using basic stdio for generic platforms
-    csrc/posix - I/O code for Posix platform
-    csrc/win32 - I/O code for basic WIN32 platform
-    csrc/win32_console - I/O code for WIN32 console that supports command line history
-    
-    fth - Forth code
-    fth/util - utility functions
+TO BUILD AND TEST:
+WARNING: This project has only been tested on Debian with openMPI's openSHMEM! If you run it with another openSHMEM or OS let me know!
 
--- How to build pForth ------------------------------------
+1. Install an openSHMEM implementation. https://www.open-mpi.org/
+2. Clone the repository. 
+ ``` git clone https://github.com/danielyoureelewis/parallel-forth.git ```
+3. Run ``` cd parallel-forth/build/unix ```
+4. ./build_and_test.sh - You'll see tons of output. If everything worked. The last 4 lines will be (the PE that reports their number first can change):
+    ``` Including: test.fth
+    NUM PES: 2 
+    PE: 1 
+    PE: 0 
+    put test passed
+    get test passed
+    error test passed ```
 
-See pForth reference manual at:
+5. You can run in interactive mode like so. ``` oshrun -n 4 ./pforth_standalone ```
+   Here is an example run:
+   ```
+PForth V28-LE/64, built Dec 20 2020 07:00:50 (static)
+PForth V28-LE/64, built Dec 20 2020 07:00:50 (static)
 
-  http://www.softsynth.com/pforth/pf_ref.php
-  
--- How to run pForth ------------------------------------
 
-Once you have compiled and built the dictionary, just enter:
-     pforth
+hex
+hex   ok
+Stack<16> 
+  ok
+Stack<16> 
+pe 0 = if DEADBEEF then pe 1 = if BEEFDEAD then ; 
+pe 0 = if DEADBEEF then pe 1 = if BEEFDEAD then ;    ok
+  ok
+Stack<16> DEADBEEF 
+Stack<16> BEEFDEAD 
+variable target 1 cells allot ; 
+variable target 1 cells allot ;    ok
+Stack<16> BEEFDEAD 
+  ok
+Stack<16> DEADBEEF 
+pe 0 = if 111 target ! then pe 1 = if 999 target ! then
+pe 0 = if 111 target ! then pe 1 = if 999 target ! then   ok
+Stack<16> BEEFDEAD 
+  ok
+Stack<16> DEADBEEF 
+target @ . cr ; 
+target @ . cr ; 999 
+  ok
+Stack<16> 
+111 
+  ok
+Stack<16> 
+pe 1 = if target target 1 0 put then ; 
+pe 1 = if target target 1 0 put then ;    ok
+Stack<16> 
+  ok
+Stack<16> BEEFDEAD 
+target @ . cr ; 
+target @ . cr ;  999 
+999 
+  ok
+Stack<16> 
+  ok
+Stack<16> 
+```
 
-To compile source code files use:    INCLUDE filename
+# TODO:
+In interactive mode the stack should print the PE to which it belongs
+Test floating point ops
+Add more SHMEM functions - collectives etc
+Look for a way to integrate MPI functions
+Better formatting when in interactive mode
+It would be nice to have a history in interactive mode
 
-To create a custom dictionary enter in pForth:
-    c" newfilename.dic" SAVE-FORTH
-The name must end in ".dic".
 
-To run PForth with the new dictionary enter in the shell:
-    pforth -dnewfilename.dic
-
-To run PForth and automatically include a forth file:
-    pforth myprogram.fth
-
--- How to Test PForth ------------------------------------
-
-You can test the Forth without loading a dictionary
-which might be necessary if the dictionary can't be built.
-
-Enter:   pforth -i
-In pForth, enter:    3 4 + .
-In pForth, enter:    loadsys
-In pForth, enter:    10  0  do i . loop
-
-PForth comes with a small test suite.  To test the Core words,
-you can use the coretest developed by John Hayes.
-
-Enter:  pforth
-Enter:  include tester.fth
-Enter:  include coretest.fth
-
-To run the other tests, enter:
-
-    pforth t_corex.fth
-    pforth t_strings.fth
-    pforth t_locals.fth
-    pforth t_alloc.fth
-    
-They will report the number of tests that pass or fail.
