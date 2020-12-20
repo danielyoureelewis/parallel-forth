@@ -28,13 +28,15 @@ WARNING: This project has only been tested on Debian with openMPI's openSHMEM! I
  ``` git clone https://github.com/danielyoureelewis/parallel-forth.git ```
 3. Run ``` cd parallel-forth/build/unix ```
 4. ./build_and_test.sh - You'll see tons of output. If everything worked. The last 4 lines will be (the PE that reports their number first can change):
-    ``` Including: test.fth
-    NUM PES: 2 
-    PE: 1 
-    PE: 0 
-    put test passed
-    get test passed
-    error test passed ```
+``` 
+Including: test.fth
+NUM PES: 2 
+PE: 1 
+PE: 0 
+put test passed
+get test passed
+error test passed 
+```
 
 5. You can run in interactive mode like so. ``` oshrun -n 4 ./pforth_standalone ```
    
