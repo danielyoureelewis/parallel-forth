@@ -1,4 +1,4 @@
-README for parallel-forth - a shared memory Forth by Daniel Y. Lewis. This is a modification of pForth by Phil Burk with Larry Polansky, David Rosenboom, Darren Gibbs, and Alexsej Saushev.
+README for pforth-parallel - a shared memory Forth by Daniel Y. Lewis. This is a modification of pForth by Phil Burk with Larry Polansky, David Rosenboom, Darren Gibbs, and Alexsej Saushev.
 
 Last updated: 12/20/2020
 
