@@ -1,10 +1,5 @@
-README for pforth-shmem - a Partitioned Global Address Space (PGAS) parallel FORTH by Daniel Y. Lewis. This is a modification of pForth by Phil Burk with Larry Polansky, David Rosenboom, Darren Gibbs, and Alexsej Saushev.
-
-Last updated: 12/20/2020
-
-  
--- LEGAL NOTICE -----------------------------------------
-
+# Legal Notice 
+------------------------------------------------------------
 Permission to use, copy, modify, and/or distribute this
 software for any purpose with or without fee is hereby granted.
 
@@ -18,10 +13,15 @@ CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ------------------------------------------------------------
+
 # About:
+README for pforth-shmem - a Partitioned Global Address Space (PGAS) parallel FORTH by Daniel Y. Lewis. This is a modification of pForth by Phil Burk with Larry Polansky, David Rosenboom, Darren Gibbs, and Alexsej Saushev.
+
 This is essentially a wrapper around the openSHMEM library for FORTH. pForth was chosen as a code base for this project because of it's straight forward implementation, and because it is written in ANSI C.
 
-# TO BUILD AND TEST:
+Last updated: 12/20/2020
+
+# BUILD AND TEST:
 
 WARNING: This project has only been tested on Debian with openMPI openSHMEM! If you run it with another openSHMEM or OS let me know!
 
