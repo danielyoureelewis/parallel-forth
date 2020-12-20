@@ -27,7 +27,7 @@ WARNING: This project has only been tested on Debian with openMPI's openSHMEM! I
 2. Clone the repository. 
  ``` git clone https://github.com/danielyoureelewis/parallel-forth.git ```
 3. Run ``` cd parallel-forth/build/unix ```
-4. ./build_and_test.sh - You'll see tons of output. If everything worked. The last 4 lines will be (the PE that reports their number first can change):
+4. Run ``` ./build_and_test.sh ``` - You'll see tons of output. If everything worked. The last 4 lines will be (the PE that reports their number first can change):
 ``` 
 Including: test.fth
 NUM PES: 2 
