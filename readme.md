@@ -1,4 +1,4 @@
-README for pforth-shmem - a shared memory parallel Forth by Daniel Y. Lewis. This is a modification of pForth by Phil Burk with Larry Polansky, David Rosenboom, Darren Gibbs, and Alexsej Saushev.
+README for pforth-shmem - a Partitioned Global Address Space (PGAS) parallel FORTH by Daniel Y. Lewis. This is a modification of pForth by Phil Burk with Larry Polansky, David Rosenboom, Darren Gibbs, and Alexsej Saushev.
 
 Last updated: 12/20/2020
 
@@ -19,7 +19,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ------------------------------------------------------------
 # About:
-This is essentially a wrapper around the openSHMEM library for FOURTH. pForth was chosen as a code base for this project because of it's straight forward implementation, and because it is written in ANSI C.
+This is essentially a wrapper around the openSHMEM library for FORTH. pForth was chosen as a code base for this project because of it's straight forward implementation, and because it is written in ANSI C.
 
 # TO BUILD AND TEST:
 
