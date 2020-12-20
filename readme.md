@@ -36,7 +36,7 @@ WARNING: This project has only been tested on Debian with openMPI's openSHMEM! I
     get test passed
     error test passed ```
 
-5. You can run in interactive mode like so. ``` oshrun -n 4 ./pforth_standalone 
+5. You can run in interactive mode like so. ``` oshrun -n 4 ./pforth_standalone ```
    
 Here is an example run:
 ```
@@ -87,10 +87,15 @@ Stack<16>
 
 # TODO:
 In interactive mode the stack should print the PE to which it belongs
+
 Test floating point ops
+
 Add more SHMEM functions - collectives etc
+
 Look for a way to integrate MPI functions
+
 Better formatting when in interactive mode
+
 It would be nice to have a history in interactive mode
 
 
