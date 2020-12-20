@@ -35,9 +35,10 @@ WARNING: This project has only been tested on Debian with openMPI's openSHMEM! I
     get test passed
     error test passed ```
 
-5. You can run in interactive mode like so. ``` oshrun -n 4 ./pforth_standalone ```
-   Here is an example run:
-   ```
+5. You can run in interactive mode like so. ``` oshrun -n 4 ./pforth_standalone 
+   
+Here is an example run:
+```
 PForth V28-LE/64, built Dec 20 2020 07:00:50 (static)
 PForth V28-LE/64, built Dec 20 2020 07:00:50 (static)
 
