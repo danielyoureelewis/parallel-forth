@@ -23,7 +23,7 @@ This is essentially a wrapper around the openSHMEM library for FOURTH. pForth wa
 
 # TO BUILD AND TEST:
 
-WARNING: This project has only been tested on Debian with openMPI's openSHMEM! If you run it with another openSHMEM or OS let me know!
+WARNING: This project has only been tested on Debian with openMPI openSHMEM! If you run it with another openSHMEM or OS let me know!
 
 1. Install an openSHMEM implementation. https://www.open-mpi.org/
 2. Clone the repository. 
