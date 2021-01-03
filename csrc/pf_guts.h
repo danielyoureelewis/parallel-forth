@@ -92,6 +92,11 @@ enum shmem_func_ids
     SHMEM_BARRIER,
     SHMEM_MALLOC,
 };
+
+enum shmem_coll_func_ids
+{
+    SHMEM_BROADCAST = 0
+};
 /***************************************************************
 ** Primitive Token IDS
 ** Do NOT change the order of these IDs or dictionary files will break!
@@ -301,13 +306,14 @@ enum cforth_primitive_ids
     ID_FILE_FLUSH,		/* FLUSH-FILE */
     ID_FILE_RENAME,		/* (RENAME-FILE) */
     ID_FILE_RESIZE,		/* RESIZE-FILE */
+    /* 2 words added for shmem operations */
     ID_SHMEM_OP,
+    ID_SHMEM_COLL_OP,
 /* If you add a word here, take away one reserved word below. */
 #ifdef PF_SUPPORT_FP
 /* Only reserve space if we are adding FP so that we can detect
 ** unsupported primitives when loading dictionary.
 */
-    ID_RESERVED02,
     ID_RESERVED03,
     ID_RESERVED04,
     ID_RESERVED05,

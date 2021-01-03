@@ -1205,7 +1205,34 @@ ThrowCode pfCatch( ExecToken XT )
                 break;
             }
             default:
-                //fprintf(stderr, "ERROR: Not a SHMEM function\n");
+                fprintf(stderr, "ERROR: Not a SHMEM function\n");
+                TOS = (cell_t) -1;
+            }
+        }
+        endcase;
+        case ID_SHMEM_COLL_OP:
+        {
+            switch (TOS){
+            case SHMEM_BROADCAST:
+            {
+                /*void shmem_broadcast64(void*dest,const void*source,size_tnelems,intPE_root,intPE_start,intlogPE_stride,intPE_size,long*pSync);
+                I am going to use an implementation wide pSync for now. I don't like having to worry about
+                that and I am going to switch to a 1.5 openSHMEM implementation that does not use it soon.
+                */
+                shmem_broadcast64((void*)M_STACK(6),
+                                  (void*)M_STACK(5),
+                                  (size_t)M_STACK(4),
+                                  (int)M_STACK(3),
+                                  (int)M_STACK(2),
+                                  (int)M_STACK(1),
+                                  (int)M_STACK(0),
+                                  pSync);  
+                
+                TOS = (*(STKPTR+=8));
+                break;
+            }
+            default:
+                fprintf(stderr, "ERROR: Not a SHMEM function\n");
                 TOS = (cell_t) -1;
             }
         }

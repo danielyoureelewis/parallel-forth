@@ -17,7 +17,8 @@ variable dest 1 cells allot ;
            pe 1 = if
              target target 1 0 PUT then
            barrier
-           pe 0 = 999 target @ = and if ." put test passed" cr then flushemit
+           pe 0 = 999 target @ = and if ." put test passed" cr then
+           flushemit
            print-target ;
 : test-get pe 0 = if 111 target ! then
            pe 1 = if 999 target ! then
@@ -28,6 +29,14 @@ variable dest 1 cells allot ;
            barrier
            pe 0 = 999 target @ = and if ." get test passed" cr then flushemit
            print-target ;
+: test-broadcast pe 0 = if 111 target ! else 999 target ! then
+                 barrier
+                 print-target
+                 target target 1 0 0 0 pes broadcast
+                 pe 1 = 111 target @ = and if ." broadcast test passed" cr then
+                 flushemit
+                 print-target ; 
+                   
 : test-error false = pe 0 = and if ." error test passed" cr then flushemit ;
 
 
@@ -40,5 +49,6 @@ test-put
 print-0-stack
 test-get
 print-0-stack
-pe test-error
+test-broadcast
 print-0-stack
+pe test-error
