@@ -89,13 +89,26 @@ enum shmem_func_ids
     SHMEM_MY_PE,
     SHMEM_PUT,
     SHMEM_GET,
-    SHMEM_BARRIER,
-    SHMEM_MALLOC,
+    SHMEM_GLOBAL_EXIT,
 };
 
 enum shmem_coll_func_ids
 {
-    SHMEM_BROADCAST = 0
+    SHMEM_BARRIER_ALL = 0,
+    SHMEM_BARRIER,
+    SHMEM_MALLOC,
+    SHMEM_BROADCAST,
+    SHMEM_SYNC_ALL,
+    SHMEM_SYNC,
+    SHMEM_COLLECT,
+    SHMEM_FCOLLECT,
+    SHMEM_AND_REDUCE,
+    SHMEM_MAX_REDUCE,
+    SHMEM_MIN_REDUCE,
+    SHMEM_SUM_REDUCE,
+    SHMEM_PROD_REDUCE,
+    SHMEM_OR_REDUCE,
+    SHMEM_XOR_REDUCE,
 };
 /***************************************************************
 ** Primitive Token IDS

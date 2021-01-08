@@ -1193,15 +1193,9 @@ ThrowCode pfCatch( ExecToken XT )
                 TOS = (*(STKPTR+=5));
                 break;
             }
-            case SHMEM_BARRIER:
+            case SHMEM_GLOBAL_EXIT:
             {
-                shmem_barrier_all();
-                TOS = (*(STKPTR++));
-                break;
-            }
-            case SHMEM_MALLOC:
-            {
-                TOS = (cell_t) shmem_malloc(TOS);
+                shmem_global_exit((int)TOS);
                 break;
             }
             default:
@@ -1213,6 +1207,26 @@ ThrowCode pfCatch( ExecToken XT )
         case ID_SHMEM_COLL_OP:
         {
             switch (TOS){
+            case SHMEM_BARRIER_ALL:
+            {
+                shmem_barrier_all();
+                TOS = (*(STKPTR++));
+                break;
+            }
+            case SHMEM_BARRIER:
+            {
+                shmem_barrier((int)M_STACK(2),
+                              (int)M_STACK(1),
+                              (int)M_STACK(0),
+                              pSync);  
+                TOS = (*(STKPTR++));
+                break;
+            }
+            case SHMEM_MALLOC:
+            {
+                TOS = (cell_t) shmem_malloc(TOS);
+                break;
+            }
             case SHMEM_BROADCAST:
             {
                 /*void shmem_broadcast64(void*dest,const void*source,size_tnelems,intPE_root,intPE_start,intlogPE_stride,intPE_size,long*pSync);
@@ -1227,8 +1241,133 @@ ThrowCode pfCatch( ExecToken XT )
                                   (int)M_STACK(1),
                                   (int)M_STACK(0),
                                   pSync);  
-                
+ 
                 TOS = (*(STKPTR+=8));
+                break;
+            }
+            case SHMEM_SYNC_ALL:
+            {
+                shmem_sync_all();  
+                TOS = (*(STKPTR++));
+                break;
+            }
+            case SHMEM_SYNC:
+            {
+                shmem_sync((int)M_STACK(2),
+                           (int)M_STACK(1),
+                           (int)M_STACK(0),
+                           pSync);  
+                TOS = (*(STKPTR++));
+                break;
+            }
+            case SHMEM_COLLECT:
+            {
+                shmem_collect64((void*)M_STACK(5),
+                                  (void*)M_STACK(4),
+                                  (size_t)M_STACK(3),
+                                  (int)M_STACK(2),
+                                  (int)M_STACK(1),
+                                  (int)M_STACK(0),
+                                  pSync);  
+ 
+                TOS = (*(STKPTR+=7));
+                break;
+            }
+            case SHMEM_FCOLLECT:
+            {
+                shmem_fcollect64((void*)M_STACK(5),
+                                  (void*)M_STACK(4),
+                                  (size_t)M_STACK(3),
+                                  (int)M_STACK(2),
+                                  (int)M_STACK(1),
+                                  (int)M_STACK(0),
+                                  pSync);  
+ 
+                TOS = (*(STKPTR+=7));
+                break;
+            }
+            case SHMEM_AND_REDUCE:
+            {
+                shmem_int_and_to_all((int*)M_STACK(6),
+                                     (int*)M_STACK(5),
+                                     (int)M_STACK(4),
+                                     (int)M_STACK(3),
+                                     (int)M_STACK(2),
+                                     (int)M_STACK(1),
+                                     (int*)M_STACK(0),
+                                     pSync);  
+                break;
+            }
+            case SHMEM_MAX_REDUCE:
+            {
+                shmem_int_max_to_all((int*)M_STACK(6),
+                                     (int*)M_STACK(5),
+                                     (int)M_STACK(4),
+                                     (int)M_STACK(3),
+                                     (int)M_STACK(2),
+                                     (int)M_STACK(1),
+                                     (int*)M_STACK(0),
+                                     pSync);  
+                break;
+            }
+            case SHMEM_MIN_REDUCE:
+            {
+                shmem_int_min_to_all((int*)M_STACK(6),
+                                     (int*)M_STACK(5),
+                                     (int)M_STACK(4),
+                                     (int)M_STACK(3),
+                                     (int)M_STACK(2),
+                                     (int)M_STACK(1),
+                                     (int*)M_STACK(0),
+                                     pSync);  
+                break;
+            }
+            case SHMEM_SUM_REDUCE:
+            {
+                shmem_int_sum_to_all((int*)M_STACK(6),
+                                     (int*)M_STACK(5),
+                                     (int)M_STACK(4),
+                                     (int)M_STACK(3),
+                                     (int)M_STACK(2),
+                                     (int)M_STACK(1),
+                                     (int*)M_STACK(0),
+                                     pSync);  
+                break;
+            }
+            case SHMEM_PROD_REDUCE:
+            {
+                shmem_int_prod_to_all((int*)M_STACK(6),
+                                      (int*)M_STACK(5),
+                                      (int)M_STACK(4),
+                                      (int)M_STACK(3),
+                                      (int)M_STACK(2),
+                                      (int)M_STACK(1),
+                                      (int*)M_STACK(0),
+                                      pSync);  
+                break;
+            }
+            case SHMEM_OR_REDUCE:
+            {
+                shmem_int_or_to_all((int*)M_STACK(6),
+                                    (int*)M_STACK(5),
+                                    (int)M_STACK(4),
+                                    (int)M_STACK(3),
+                                    (int)M_STACK(2),
+                                    (int)M_STACK(1),
+                                    (int*)M_STACK(0),
+                                    pSync);  
+                break;
+            }
+            case SHMEM_XOR_REDUCE:
+            {
+                shmem_int_xor_to_all((int*)M_STACK(6),
+                                     (int*)M_STACK(5),
+                                     (int)M_STACK(4),
+                                     (int)M_STACK(3),
+                                     (int)M_STACK(2),
+                                     (int)M_STACK(1),
+                                     (int*)M_STACK(0),
+                                     pSync);  
                 break;
             }
             default:
