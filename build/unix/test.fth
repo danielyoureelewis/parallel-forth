@@ -5,57 +5,117 @@ variable dest 1 cells allot ;
 
 ( helper words )
 : print-0-stack debug true = pe 0 = and if .S then ; 
+
 : print-target debug if pe . target @ . cr then ;
 
 ( test words )
-: test-pes pe 0 = if ." NUM PES: " pes . cr then
+: test-pes pe 0 = if
+             ." Testing with " pes .
+             ." pes."  cr
+           then
            flushemit
-           barrier_all ;
-: test-pe ." PE: " pe . cr flushemit ;
-: test-put pe 0 = if 111 target ! then
-           pe 1 = if 999 target ! then
-           print-target
-           barrier_all
+           barrier-all ;
+
+: test-pe ." PE: " pe . ." present!" cr flushemit ;
+
+: test-put pe 0 = if
+             111 target !
+           then
            pe 1 = if
-             target target 1 0 PUT then
-           barrier_all
-           pe 0 = 999 target @ = and if ." put test passed" cr then
-           flushemit
-           print-target ;
-: test-get pe 0 = if 111 target ! then
-           pe 1 = if 999 target ! then
+             999 target !
+           then
            print-target
-           barrier_all
-           pe 0 = if
-             target target 1 1 GET then
-           barrier_all
-           pe 0 = 999 target @ = and if ." get test passed" cr then
+           barrier-all
+           pe 1 = if
+             target target 1 0 PUT
+           then
+           barrier-all
+           pe 0 = 999 target @ = invert and if
+             ." put test failed" cr
+           then
            flushemit
            print-target ;
-: test-broadcast pe 0 = if 111 target ! else 999 target ! then
-                 barrier_all
+
+: test-get pe 0 = if
+             111 target !
+           then
+           pe 1 = if
+             999 target !
+           then
+           print-target
+           barrier-all
+           pe 0 = if
+             target target 1 1 GET
+           then
+           barrier-all
+           pe 0 = 999 target @ = invert and if
+             ." get test failed" cr
+           then
+           flushemit
+           print-target ;
+
+: test-broadcast pe 0 = if
+                   111 target !
+                 else
+                   999 target !
+                 then
+                 barrier-all
                  print-target
                  target target 1 0 0 0 pes broadcast
-                 pe 1 = 111 target @ = and if ." broadcast test passed" cr then
+                 pe 1 = 111 target @ = invert and if
+                   ." broadcast test failed" cr
+                 then
                  flushemit
                  print-target ; 
                    
-: test-error false = pe 0 = and if ." error test passed" cr then
+: test-error false = invert pe 0 = and if
+               ." error test passed" cr
+             then
              flushemit ;
 
 variable collection pes cells allot ;  
-: test-collect 1 target !
+: test-collect pe target !
                collection target 1 0 0 pes collect
-               0 pe = if
-                 pes 0 do
-                   collection I cells + I = invert
-                   if
-                     ." collect failed" cr leave
-                   then
-                 loop then ;
+               pes 0 do
+                 collection I cells + @ I = invert if
+                   pe ." collect failed" cr leave
+                 then
+               loop ;
+
+variable work 2 cells allot ;
+: test-and-reduction 1 target !
+                     target target 1 0 0 pes work and-reduction
+                     1 target @ = invert if ." and reduction failed" then
+                     pe target ! 
+                     target target 1 0 0 pes work and-reduction
+                     0 target @ = invert if ." and reduction failed" then ;
+
+: test-max-reduction pe target ! 
+                     target target 1 0 0 pes work max-reduction
+                     pes 1 - target @ = invert if ." max reduction failed" then ;
+
+: test-min-reduction pe target ! 
+                     target target 1 0 0 pes work min-reduction
+                     0 target @ = invert if ." min reduction failed" then ;
+
+: test-sum-reduction 1 target ! 
+                     target target 1 0 0 pes work sum-reduction
+                     pes target @ = invert if ." sum reduction failed" cr then ;
+
+: test-prod-reduction pes target ! 
+                     target target 1 0 0 pes work prod-reduction
+                     pes pes * target @ = invert if ." prod reduction failed" cr then ;
+
+: test-or-reduction pe 0 = if 10000000 target ! else 1 target ! then  
+                     target target 1 0 0 pes work or-reduction
+                     10000001 target @ = invert if ." or reduction failed" cr then ;
+
+: test-xor-reduction pe 0 = if 10000001 target ! else 1 target ! then  
+                     target target 1 0 0 pes work xor-reduction
+                     10000000 target @ = invert if ." xor reduction failed" cr then ;
 
 0 pe = if cr ." Testing Basics:" cr flushemit then ; 
-barrier_all ; 
+barrier-all ; 
 test-pes
 print-0-stack
 test-pe
@@ -64,15 +124,21 @@ test-put
 print-0-stack
 test-get
 print-0-stack
-barrier_all ; 
+barrier-all ; 
 0 pe = if cr ." Testing Collectives:" cr flushemit then ; 
-barrier_all ; 
+barrier-all ; 
 test-broadcast
 print-0-stack
-barrier_all ; 
+barrier-all ; 
 test-collect
 print-0-stack ;
-barrier_all ; 
+barrier-all ; 
+test-and-reduction 
+test-max-reduction
+test-min-reduction
+test-prod-reduction
+test-or-reduction
+test-xor-reduction
 0 pe = if cr ." Testing Errors:" cr flushemit then ; 
-barrier_all ;
+barrier-all ;
 pe test-error
