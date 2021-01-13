@@ -1,5 +1,5 @@
 /* @(#) pfcustom.c 98/01/26 1.3 */
-
+#undef PF_USER_CUSTOM
 #ifndef PF_USER_CUSTOM
 
 /***************************************************************
@@ -30,25 +30,29 @@
 
 
 #include "pf_all.h"
+#include <shmem.h>
 
-static cell_t CTest0( cell_t Val );
-static void CTest1( cell_t Val1, cell_t Val2 );
-
+static void pf_shmem_put(cell_t dest, cell_t source, cell_t nelems, cell_t pe);
+static void pf_shmem_get(cell_t dest, cell_t source, cell_t nelems, cell_t pe);
 /****************************************************************
 ** Step 1: Put your own special glue routines here
 **     or link them in from another file or library.
 ****************************************************************/
-static cell_t CTest0( cell_t Val )
+/* This op switched on TOS to choose which shmem function to call
+   The rest will be handled in FORTH code
+*/
+
+static void pf_shmem_put(cell_t dest, cell_t source, cell_t nelems, cell_t pe)
 {
-    MSG_NUM_D("CTest0: Val = ", Val);
-    return Val+1;
+    /* 2 64 bit addrs + 64 bit len + 32 bit PE = 20 bytes */
+    //fprintf(stderr, "SHMEM_PUT: %p %p  0x%08x 0x%08x\n", M_STACK(3), M_STACK(2), M_STACK(1), M_STACK(0));
+    shmem_putmem((char*)dest, (char*)source, (size_t)nelems*2, (int)pe);
 }
 
-static void CTest1( cell_t Val1, cell_t Val2 )
+static void pf_shmem_get(cell_t dest, cell_t source, cell_t nelems, cell_t pe)
 {
-
-    MSG("CTest1: Val1 = "); ffDot(Val1);
-    MSG_NUM_D(", Val2 = ", Val2);
+    //fprintf(stderr, "SHMEM_GET: %p %p  0x%08x 0x%08x\n", M_STACK(3), M_STACK(2), M_STACK(1), M_STACK(0));
+    shmem_getmem((char*)dest, (char*)source, (size_t)nelems*2, (int)pe);
 }
 
 /****************************************************************
@@ -65,13 +69,11 @@ static void CTest1( cell_t Val1, cell_t Val2 )
 ** Do not change the name of LoadCustomFunctionTable()!
 ** It is called by the pForth kernel.
 */
-#define NUM_CUSTOM_FUNCTIONS  (2)
+#define NUM_CUSTOM_FUNCTIONS  (6)
 CFunc0 CustomFunctionTable[NUM_CUSTOM_FUNCTIONS];
 
 Err LoadCustomFunctionTable( void )
 {
-    CustomFunctionTable[0] = CTest0;
-    CustomFunctionTable[1] = CTest1;
     return 0;
 }
 
@@ -82,8 +84,26 @@ Err LoadCustomFunctionTable( void )
 */
 CFunc0 CustomFunctionTable[] =
 {
-    (CFunc0) CTest0,
-    (CFunc0) CTest1
+    (CFunc0) shmem_n_pes,
+    (CFunc0) shmem_my_pe,
+    (CFunc4) pf_shmem_put,
+    (CFunc4) pf_shmem_get,
+    (CFunc1) shmem_global_exit,
+    (CFunc4) shmem_barrier,
+    (CFunc0) shmem_barrier_all,
+    (CFunc1) shmem_malloc,
+    (CFunc8) shmem_broadcast64,
+    (CFunc0) shmem_sync_all,
+    (CFunc7) shmem_collect64,
+    (CFunc7) shmem_fcollect64,
+    (CFunc8) shmem_int_and_to_all,
+    (CFunc8) shmem_int_max_to_all,
+    (CFunc8) shmem_int_min_to_all,
+    (CFunc8) shmem_int_sum_to_all,
+    (CFunc8) shmem_int_prod_to_all,
+    (CFunc8) shmem_int_or_to_all,
+    (CFunc8) shmem_int_xor_to_all,
+    (CFunc7) shmem_alltoall64,
 };
 #endif
 
@@ -102,9 +122,45 @@ Err CompileCustomFunctions( void )
 ** Make sure order of functions matches that in LoadCustomFunctionTable().
 ** Parameters are: Name in UPPER CASE, Function, Index, Mode, NumParams
 */
-    err = CreateGlueToC( "CTEST0", i++, C_RETURNS_VALUE, 1 );
+    err = CreateGlueToC( "PES", i++, C_RETURNS_VALUE, 0 );
     if( err < 0 ) return err;
-    err = CreateGlueToC( "CTEST1", i++, C_RETURNS_VOID, 2 );
+    err = CreateGlueToC( "PE", i++, C_RETURNS_VALUE, 0 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "PUT", i++, C_RETURNS_VOID, 4 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "GET", i++, C_RETURNS_VOID, 4 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "GLOBAL-EXIT", i++, C_RETURNS_VALUE, 1 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "BARRIER", i++, C_RETURNS_VOID, 4 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "BARRIER-ALL", i++, C_RETURNS_VOID, 0 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "MALLOC", i++, C_RETURNS_VOID, 1 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "BROADCAST", i++, C_RETURNS_VOID, 8 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "SYNC", i++, C_RETURNS_VOID, 0 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "COLLECT", i++, C_RETURNS_VOID, 7 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "FCOLLECT", i++, C_RETURNS_VOID, 7 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "AND-REDUCTION", i++, C_RETURNS_VOID, 8 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "MAX-REDUCTION", i++, C_RETURNS_VOID, 8 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "MIN-REDUCTION", i++, C_RETURNS_VOID, 8 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "SUM-REDUCTION", i++, C_RETURNS_VOID, 8 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "PROD-REDUCTION", i++, C_RETURNS_VOID, 8 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "OR-REDUCTION", i++, C_RETURNS_VOID, 8 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "XOR-REDUCTION", i++, C_RETURNS_VOID, 8 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "ALL-TO-ALL", i++, C_RETURNS_VOID, 7 );
     if( err < 0 ) return err;
 
     return 0;

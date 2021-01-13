@@ -38,6 +38,9 @@ FULL_WARNINGS =  \
         -Wmissing-declarations
 
 DEBUGOPTS = -g
+
+EXTRA_CCOPTS = -DPF_USER_CUSTOM="/home/user/parallel-forths/csrc/pfcustom.c"
+
 CCOPTS = $(WIDTHOPT) -x c -O2 $(FULL_WARNINGS) $(EXTRA_CCOPTS) $(DEBUGOPTS)
 
 IO_SOURCE = pf_io_posix.c pf_fileio_stdio.c

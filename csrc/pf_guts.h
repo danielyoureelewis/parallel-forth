@@ -109,6 +109,7 @@ enum shmem_coll_func_ids
     SHMEM_PROD_REDUCE,
     SHMEM_OR_REDUCE,
     SHMEM_XOR_REDUCE,
+    SHMEM_ALLTOALL,
 };
 /***************************************************************
 ** Primitive Token IDS
@@ -320,13 +321,13 @@ enum cforth_primitive_ids
     ID_FILE_RENAME,		/* (RENAME-FILE) */
     ID_FILE_RESIZE,		/* RESIZE-FILE */
     /* 2 words added for shmem operations */
-    ID_SHMEM_OP,
-    ID_SHMEM_COLL_OP,
 /* If you add a word here, take away one reserved word below. */
 #ifdef PF_SUPPORT_FP
 /* Only reserve space if we are adding FP so that we can detect
 ** unsupported primitives when loading dictionary.
 */
+    ID_RESERVED01,
+    ID_RESERVED02,
     ID_RESERVED03,
     ID_RESERVED04,
     ID_RESERVED05,

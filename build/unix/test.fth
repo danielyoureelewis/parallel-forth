@@ -54,6 +54,7 @@ variable dest 1 cells allot ;
            flushemit
            print-target ;
 
+variable pSync pes cells allot ;
 : test-broadcast pe 0 = if
                    111 target !
                  else
@@ -61,7 +62,7 @@ variable dest 1 cells allot ;
                  then
                  barrier-all
                  print-target
-                 target target 1 0 0 0 pes broadcast
+                 target target 1 0 0 0 pes pSync broadcast
                  pe 1 = 111 target @ = invert and if
                    ." broadcast test failed" cr
                  then
@@ -75,7 +76,7 @@ variable dest 1 cells allot ;
 
 variable collection pes cells allot ;  
 : test-collect pe target !
-               collection target 1 0 0 pes collect
+               collection target 1 0 0 pes pSync collect
                pes 0 do
                  collection I cells + @ I = invert if
                    pe ." collect failed" cr leave
@@ -84,36 +85,45 @@ variable collection pes cells allot ;
 
 variable work 2 cells allot ;
 : test-and-reduction 1 target !
-                     target target 1 0 0 pes work and-reduction
+                     target target 1 0 0 pes work pSync and-reduction
                      1 target @ = invert if ." and reduction failed" then
                      pe target ! 
-                     target target 1 0 0 pes work and-reduction
+                     target target 1 0 0 pes work pSync and-reduction
                      0 target @ = invert if ." and reduction failed" then ;
 
 : test-max-reduction pe target ! 
-                     target target 1 0 0 pes work max-reduction
+                     target target 1 0 0 pes work pSync max-reduction
                      pes 1 - target @ = invert if ." max reduction failed" then ;
 
 : test-min-reduction pe target ! 
-                     target target 1 0 0 pes work min-reduction
+                     target target 1 0 0 pes work pSync min-reduction
                      0 target @ = invert if ." min reduction failed" then ;
 
 : test-sum-reduction 1 target ! 
-                     target target 1 0 0 pes work sum-reduction
+                     target target 1 0 0 pes work pSync sum-reduction
                      pes target @ = invert if ." sum reduction failed" cr then ;
 
 : test-prod-reduction pes target ! 
-                     target target 1 0 0 pes work prod-reduction
+                     target target 1 0 0 pes work pSync prod-reduction
                      pes pes * target @ = invert if ." prod reduction failed" cr then ;
 
 : test-or-reduction pe 0 = if 10000000 target ! else 1 target ! then  
-                     target target 1 0 0 pes work or-reduction
+                     target target 1 0 0 pes work pSync or-reduction
                      10000001 target @ = invert if ." or reduction failed" cr then ;
 
 : test-xor-reduction pe 0 = if 10000001 target ! else 1 target ! then  
-                     target target 1 0 0 pes work xor-reduction
+                     target target 1 0 0 pes work pSync xor-reduction
                      10000000 target @ = invert if ." xor reduction failed" cr then ;
 
+pes 0 do 0 collection I cells + loop ; 
+: test-all-to-all pe target ! 
+                collection target 0 0 0 pes all-to-all 
+                pes 0 do
+                  collection I cells + @ I = invert if
+                    ." alltoall failed" cr leave
+                  then
+                loop ;
+                
 0 pe = if cr ." Testing Basics:" cr flushemit then ; 
 barrier-all ; 
 test-pes
@@ -139,6 +149,7 @@ test-min-reduction
 test-prod-reduction
 test-or-reduction
 test-xor-reduction
+test-all-to-all 
 0 pe = if cr ." Testing Errors:" cr flushemit then ; 
 barrier-all ;
 pe test-error
