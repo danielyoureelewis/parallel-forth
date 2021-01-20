@@ -31,6 +31,7 @@
 
 #include "pf_all.h"
 #include <shmem.h>
+#include "pf_wtime.c"
 
 static void pf_shmem_put(cell_t dest, cell_t source, cell_t nelems, cell_t pe);
 static void pf_shmem_get(cell_t dest, cell_t source, cell_t nelems, cell_t pe);
@@ -104,6 +105,8 @@ CFunc0 CustomFunctionTable[] =
     (CFunc8) shmem_int_or_to_all,
     (CFunc8) shmem_int_xor_to_all,
     (CFunc7) shmem_alltoall64,
+    (CFunc0) shmem_quiet,
+    (CFunc1) wtime,
 };
 #endif
 
@@ -161,6 +164,10 @@ Err CompileCustomFunctions( void )
     err = CreateGlueToC( "XOR-REDUCTION", i++, C_RETURNS_VOID, 8 );
     if( err < 0 ) return err;
     err = CreateGlueToC( "ALL-TO-ALL", i++, C_RETURNS_VOID, 7 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "QUIET", i++, C_RETURNS_VOID, 0 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "WTIME", i++, C_RETURNS_VOID, 1 );
     if( err < 0 ) return err;
 
     return 0;
