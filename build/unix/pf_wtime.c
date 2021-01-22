@@ -1,11 +1,10 @@
 #include <sys/time.h>
 
-void wtime(size_t *t)
+unsigned long wtime()
 {
-    static int sec = -1;
+    //static int sec = -1;
     struct timeval tv;
     //gettimeofday(&tv, (void *)0);
-    gettimeofday(&tv, 0);
-    if (sec < 0) sec = tv.tv_sec;
-    *t = (tv.tv_sec - sec)*1.0e+6 + tv.tv_usec;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec*1.0e+6 + tv.tv_usec;
 }

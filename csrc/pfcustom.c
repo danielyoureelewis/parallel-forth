@@ -106,7 +106,7 @@ CFunc0 CustomFunctionTable[] =
     (CFunc8) shmem_int_xor_to_all,
     (CFunc7) shmem_alltoall64,
     (CFunc0) shmem_quiet,
-    (CFunc1) wtime,
+    (CFunc0) wtime,
 };
 #endif
 
@@ -167,7 +167,7 @@ Err CompileCustomFunctions( void )
     if( err < 0 ) return err;
     err = CreateGlueToC( "QUIET", i++, C_RETURNS_VOID, 0 );
     if( err < 0 ) return err;
-    err = CreateGlueToC( "WTIME", i++, C_RETURNS_VOID, 1 );
+    err = CreateGlueToC( "WTIME", i++, C_RETURNS_VALUE, 0 );
     if( err < 0 ) return err;
 
     return 0;

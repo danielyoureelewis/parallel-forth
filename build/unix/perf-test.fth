@@ -8,13 +8,13 @@ defer test-word ;
            iter 0 do
              I warm-up =
              if
-               time wtime
+               wtime time ! 
              then 
              elem elem 0 1 put
              quiet
-             time wtime
-             time @ iter / time ! 
-           loop ;
+           loop
+           wtime time @ - time !
+           time @ iter / time ! ; 
 
 
 variable elem 65 elem ! ;
@@ -36,10 +36,3 @@ if
   time @ . cr
 then ;
 
-' barrier-all is test-word
-pe 0 = 
-if
-  ." begin barrier test" cr
-  time elem test-lat 
-  time @ . cr
-then ;
