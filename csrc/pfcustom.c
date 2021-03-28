@@ -105,6 +105,7 @@ CFunc0 CustomFunctionTable[] =
     (CFunc8) shmem_int_or_to_all,
     (CFunc8) shmem_int_xor_to_all,
     (CFunc7) shmem_alltoall64,
+    (CFunc8) shmem_double_sum_to_all,
     (CFunc0) shmem_quiet,
     (CFunc0) wtime,
 };
@@ -164,6 +165,8 @@ Err CompileCustomFunctions( void )
     err = CreateGlueToC( "XOR-REDUCTION", i++, C_RETURNS_VOID, 8 );
     if( err < 0 ) return err;
     err = CreateGlueToC( "ALL-TO-ALL", i++, C_RETURNS_VOID, 7 );
+    if( err < 0 ) return err;
+    err = CreateGlueToC( "FSUM-REDUCTION", i++, C_RETURNS_VOID, 8 );
     if( err < 0 ) return err;
     err = CreateGlueToC( "QUIET", i++, C_RETURNS_VOID, 0 );
     if( err < 0 ) return err;

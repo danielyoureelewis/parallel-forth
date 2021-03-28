@@ -10,7 +10,7 @@ defer test-word ;
              if
                wtime time ! 
              then 
-             elem elem 0 1 put
+             elem elem 0 1 test-word
              quiet
            loop
            wtime time @ - time !
