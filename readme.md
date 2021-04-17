@@ -36,6 +36,21 @@ PE: 0
 put test passed
 get test passed
 error test passed 
+PForth V28-LE/64, built Apr 16 2021 21:22:31 (static)
+PForth V28-LE/64, built Apr 16 2021 21:22:31 (static)
+
+
+Including: test.fth
+Including: test.fth
+
+Testing Basics:
+Testing with 2 pes.
+PE: 0 present!
+PE: 1 present!
+
+Testing Collectives:
+
+Testing Errors:
 ```
 
 5. You can run in interactive mode like so. ``` oshrun -n 4 ./pforth_standalone ```
@@ -95,9 +110,5 @@ Test floating point ops
 Add more SHMEM functions - collectives etc
 
 Look for a way to integrate MPI functions
-
-Better formatting when in interactive mode
-
-It would be nice to have a history in interactive mode
 
 Segregate memory so that all allocations do not need to be symmetric.
